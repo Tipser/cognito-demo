@@ -12,7 +12,7 @@ console.log(awsConfig);
 function App() {
     const [user, setUser] = useState();
     const [userData, setUserData] = useState();
-    const [_, setCustomState] = useState();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         Hub.listen("auth", ({ payload: { event, data } }) => {
@@ -23,9 +23,6 @@ function App() {
                 case "signOut":
                     setUser(null);
                     break;
-                case "customOAuthState":
-                    setCustomState(data);
-                    break;
                 default:
                     console.error(`Unknown event: ${event}`)
             }
@@ -33,8 +30,12 @@ function App() {
 
         Auth.currentAuthenticatedUser()
             .then((user) => setUser(user))
-            .catch(() => console.log("Not signed in"));
-    }, []);
+            .then(() => setIsLoading(false))
+            .catch(() => {
+                console.log("Not signed in");
+                setIsLoading(false)
+            });
+    }, [setIsLoading]);
 
     useEffect(() => {
         if (user) {
@@ -70,24 +71,28 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo"/>
-                {user && (
-                    <div>
-                        <button onClick={() => Auth.signOut()}>Sign Out {user.getUsername()} {userEmail}</button>
-                        <p>User groups: {userGroups.length > 0 ? userGroups.join(', ') : <i>no groups</i>}</p>
-                    </div>
-                )}
-                {!user && <div>
-                    <button onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}>Open Facebook</button>
-                    <button onClick={() => Auth.federatedSignIn({ provider: 'Google' })}>Open Google</button>
-                    <button onClick={() => Auth.federatedSignIn({ provider: 'COGNITO' })}>Open Hosted UI
-                    </button>
+                {isLoading && <p>Loading...</p>}
+                {!isLoading && <div>
+                    <img src={logo} className="App-logo" alt="logo"/>
+                    {user && (
+                        <div>
+                            <button onClick={() => Auth.signOut()}>Sign
+                                Out {user.getUsername()} {userEmail}</button>
+                            <p>User groups: {userGroups.length > 0 ? userGroups.join(', ') : <i>no groups</i>}</p>
+                        </div>
+                    )}
+                    {!user && <div>
+                        <button onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}>Open Facebook
+                        </button>
+                        <button onClick={() => Auth.federatedSignIn({ provider: 'Google' })}>Open Google</button>
+                        <button onClick={() => Auth.federatedSignIn({ provider: 'COGNITO' })}>Open Hosted UI
+                        </button>
 
+                    </div>}
                 </div>}
             </header>
         </div>
     );
 }
-
 
 export default App;
