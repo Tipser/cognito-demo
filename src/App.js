@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import Amplify, { Auth, Hub } from 'aws-amplify';
 
 import { awsConfig } from './custom-aws-exports';
@@ -7,43 +7,71 @@ import './App.css';
 
 Amplify.configure(awsConfig)
 
-console.log(awsConfig);
+function getUser() {
+    return new Promise((resolve, reject) => {
+        Auth.currentAuthenticatedUser()
+            .then(user => {
+                user.getUserData((err, userData) => {
+                    if (err) {
+                        reject(err);
+                    }
+                    resolve([user, userData]);
+                })
+            })
+            .catch(e => {
+                console.log('Not signed in')
+                reject(e);
+            });
+    });
+}
 
-function App() {
+function useSessionUser() {
+    const [isLoading, setIsLoading] = useState(false);
     const [user, setUser] = useState();
     const [userData, setUserData] = useState();
-    const [isLoading, setIsLoading] = useState(true);
+
+    const processUserSigningIn = useCallback(() => {
+        setIsLoading(true);
+
+        getUser().then(([user, userData]) => {
+            setUser(user);
+            setUserData(userData);
+        }).finally(() => setIsLoading(false))
+    }, [])
+
+    useEffect(() => {
+        processUserSigningIn()
+    }, [processUserSigningIn])
+
+    const signOut = useCallback(() => setUser(undefined), []);
+
+    return { isLoading, user, userData, signOut, processUserSigningIn }
+}
+
+function App() {
+    const { processUserSigningIn, userData, user, isLoading, signOut } = useSessionUser();
 
     useEffect(() => {
         Hub.listen("auth", ({ payload: { event, data } }) => {
             switch (event) {
-                case "signIn":
-                    setUser(data);
+                case 'signIn':
+                case 'cognitoHostedUI':
+                    processUserSigningIn();
                     break;
-                case "signOut":
-                    setUser(null);
+                case 'signOut':
+                    signOut()();
+                    break;
+                case 'signIn_failure':
+                case 'cognitoHostedUI_failure':
+                    console.log('Sign in failure', data);
                     break;
                 default:
                     console.error(`Unknown event: ${event}`)
             }
         });
 
-        Auth.currentAuthenticatedUser()
-            .then((user) => setUser(user))
-            .then(() => setIsLoading(false))
-            .catch(() => {
-                console.log("Not signed in");
-                setIsLoading(false)
-            });
-    }, [setIsLoading]);
-
-    useEffect(() => {
-        if (user) {
-            user.getUserData((err, result) => {
-                setUserData(result)
-            })
-        }
-    }, [user])
+        processUserSigningIn();
+    }, [processUserSigningIn, signOut]);
 
     const userEmail = useMemo(() => {
         if (!userData) {
@@ -65,6 +93,7 @@ function App() {
         }
 
         const payload = user.getSignInUserSession().getAccessToken().decodePayload()
+        console.log(payload);
         return payload['cognito:groups'] || [];
     }, [user])
 
