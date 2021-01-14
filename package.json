@@ -17,7 +17,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy:prod": "REACT_APP_APPLICAITON_URL=https://test-aws-amplify.netlify.app yarn build && netlify deploy --prod"
   },
   "eslintConfig": {
     "extends": [
