@@ -1,52 +1,13 @@
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import Amplify, { Auth, Hub } from 'aws-amplify';
 
 import { awsConfig } from './custom-aws-exports';
 import logo from './logo.svg';
 import './App.css';
+import { useSessionUser } from './use-session-user';
+import { useHelloWorldApiRequests } from './use-hello-world-callbacks';
 
 Amplify.configure(awsConfig)
-
-function getUser() {
-    return new Promise((resolve, reject) => {
-        Auth.currentAuthenticatedUser()
-            .then(user => {
-                user.getUserData((err, userData) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    resolve([user, userData]);
-                })
-            })
-            .catch(e => {
-                console.log('Not signed in')
-                reject(e);
-            });
-    });
-}
-
-function useSessionUser() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [user, setUser] = useState();
-    const [userData, setUserData] = useState();
-
-    const processUserSigningIn = useCallback(() => {
-        setIsLoading(true);
-
-        getUser().then(([user, userData]) => {
-            setUser(user);
-            setUserData(userData);
-        }).finally(() => setIsLoading(false))
-    }, [])
-
-    useEffect(() => {
-        processUserSigningIn()
-    }, [processUserSigningIn])
-
-    const signOut = useCallback(() => setUser(undefined), []);
-
-    return { isLoading, user, userData, signOut, processUserSigningIn }
-}
 
 function App() {
     const { processUserSigningIn, userData, user, isLoading, signOut } = useSessionUser();
@@ -59,7 +20,7 @@ function App() {
                     processUserSigningIn();
                     break;
                 case 'signOut':
-                    signOut()();
+                    signOut();
                     break;
                 case 'signIn_failure':
                 case 'cognitoHostedUI_failure':
@@ -69,8 +30,6 @@ function App() {
                     console.error(`Unknown event: ${event}`)
             }
         });
-
-        processUserSigningIn();
     }, [processUserSigningIn, signOut]);
 
     const userEmail = useMemo(() => {
@@ -93,9 +52,18 @@ function App() {
         }
 
         const payload = user.getSignInUserSession().getAccessToken().decodePayload()
-        console.log(payload);
         return payload['cognito:groups'] || [];
     }, [user])
+
+    const jwtIdToken = useMemo(() => {
+        if (!user) {
+            return undefined;
+        }
+        return user.getSignInUserSession().getIdToken().getJwtToken()
+    }, [user])
+
+
+    const { doAuthorizedRequest, doAuthenticatedRequest, doAnonymousRequest } = useHelloWorldApiRequests(jwtIdToken)
 
     return (
         <div className="App">
@@ -119,9 +87,16 @@ function App() {
 
                     </div>}
                 </div>}
+                <div style={{ display: 'flex' }}>
+                    <button onClick={doAnonymousRequest}>Request "hello world" for anonymous</button>
+                    <button onClick={doAuthenticatedRequest}>Request "hello world" for authenticated</button>
+                    <button onClick={doAuthorizedRequest}>Request "hello world" for group 'se-order-write'
+                    </button>
+                </div>
             </header>
         </div>
     );
 }
 
 export default App;
+

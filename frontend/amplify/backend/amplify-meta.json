@@ -1,0 +1,36 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-testawsamplify-dev-104158-authRole",
+      "UnauthRoleArn": "arn:aws:iam::770937179823:role/amplify-testawsamplify-dev-104158-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::770937179823:role/amplify-testawsamplify-dev-104158-authRole",
+      "Region": "eu-west-1",
+      "DeploymentBucketName": "amplify-testawsamplify-dev-104158-deployment",
+      "UnauthRoleName": "amplify-testawsamplify-dev-104158-unauthRole",
+      "StackName": "amplify-testawsamplify-dev-104158",
+      "StackId": "arn:aws:cloudformation:eu-west-1:770937179823:stack/amplify-testawsamplify-dev-104158/c126c9a0-564c-11eb-94dd-02c8b613c00d",
+      "AmplifyAppId": "df6ile7za915t"
+    }
+  },
+  "auth": {
+    "testawsamplify64d9f823": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "output": {
+        "UserPoolId": "eu-west-1_CQEQpCAWo",
+        "UserPoolName": "testawsamplify11f285df_userpool_11f285df-dev",
+        "AppClientID": "342pj55915vjldmgreuevd6icv",
+        "AppClientSecret": "6c26vg4i3jg07o339cbpo55dddjvntf5q9bclbf3te19v5fo276",
+        "AppClientIDWeb": "u8f7cdmkfa9d1fnhrudc28f81",
+        "HostedUIDomain": "tipser-test-auth-amplify-dev",
+        "IdentityPoolId": "eu-west-1:aba74569-dc1e-4432-b72f-05d6fab65f67",
+        "IdentityPoolName": "testawsamplify11f285df_identitypool_11f285df__dev",
+        "OAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"aws.cognito.signin.user.admin\",\"email\",\"openid\",\"phone\",\"profile\"],\"CallbackURLs\":[\"http://localhost:3000/token\",\"https://test-aws-amplify.netlify.app/token\"],\"LogoutURLs\":[\"http://localhost:3000/sign-out\",\"https://test-aws-amplify.netlify.app/sign-out\"]}"
+      },
+      "lastPushTimeStamp": "2021-01-14T09:45:47.969Z"
+    }
+  }
+}

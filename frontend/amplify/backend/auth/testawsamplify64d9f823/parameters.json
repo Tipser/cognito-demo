@@ -1,0 +1,6 @@
+{
+  "authSelections": "identityPoolAndUserPool",
+  "resourceName": "testawsamplify64d9f823",
+  "serviceType": "imported",
+  "region": "eu-west-1"
+}
