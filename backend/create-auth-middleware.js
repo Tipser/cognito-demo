@@ -6,26 +6,29 @@ module.exports = function createAuthMiddleware(requireGroups = []) {
 
         try {
             const authorizationHeader = req.headers.authorization;
-            if (!authorizationHeader) {
+            const token = authorizationHeader ? authorizationHeader.split(' ')[1] : undefined;
+            if (!authorizationHeader || !token) {
                 res.status(401).json({
                     error: "Access denied. User has to be authenticated first."
                 });
                 return;
             }
-            const token = req.headers.authorization.split(' ')[1];
+
             decodedToken = await verifyAndDecodeToken(token);
         } catch (e) {
-            const message = typeof e === 'string' ? e : "Couldn't process token";
+            const message = typeof e === 'string' ? e : "Couldn't process the token";
             res.status(401).json({
                 error: `Access denied. ${message}`
             });
+
+            return
         }
 
         const userGroups = decodedToken['cognito:groups'] || [];
 
         if (!requireGroups.every(requiredGroup => userGroups.includes(requiredGroup))) {
             res.status(403).json({
-                error: "Access denied. User has no credentials."
+                error: "Access denied. User has no enough credentials."
             })
         }
 

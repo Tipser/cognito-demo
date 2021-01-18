@@ -1,0 +1,3 @@
+.env
+amplify/.config/local-*
+amplify/team-provider-info.json

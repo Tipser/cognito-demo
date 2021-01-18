@@ -28,9 +28,15 @@ export function useHelloWorldApiRequests(authToken) {
         }
     }
 
-    const headers = useMemo(() => ({
-        Authorization: `Bearer ` + authToken
-    }), [authToken])
+    const headers = useMemo(() => {
+        if (!authToken) {
+            return {};
+        }
+
+        return {
+            Authorization: `Bearer ` + authToken
+        }
+    }, [authToken])
 
     const doAnonymousRequest = useCallback(async () => {
         safelyProcessRequest(() => ky.get(`${getApiUrl()}/anonymous/hello-world`, { headers }))

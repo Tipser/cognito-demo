@@ -1,6 +1,6 @@
 import awsConfig from './aws-exports';
 
-const applicationHost = process.env.REACT_APP_APPLICAITON_URL || 'http://localhost:3000';
+const applicationHost = process.env.REACT_APP_APPLICATION_URL || 'http://localhost:3000';
 
 awsConfig.oauth = {
     ...awsConfig.oauth,
