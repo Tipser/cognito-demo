@@ -40,7 +40,7 @@ It starts the client listening on http://localhost:3000 and the server listening
 ```
 cd frontend
 amplify pull
-REACT_APP_APPLICATION_URL=https://test-aws-amplify.netlify.app REACT_APP_API_URL=<API_URL> yarn build
+REACT_APP_APPLICATION_URL=https://test-aws-amplify.netlify.app REACT_APP_API_URL=http://cogni-Publi-CS800GWXQ8V8-883701902.eu-west-1.elb.amazonaws.com yarn build
 netlify deploy --prod 
 ```
 
@@ -49,3 +49,16 @@ netlify deploy --prod
 > You can also provide env variables by coping `.env.example` into `.env` and providing values there. 
 
 ### Deployment - backend
+
+#### Requirements:
+
+- CLI tools: `copilot` and `aws` installed
+- `aws confgiure`
+- docker logged into aws ecr
+  - `aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin 770937179823.dkr.ecr.eu-west-1.amazonaws.com`
+
+#### Deployment process:
+
+```
+copilot svc deploy --name load-balancer
+```

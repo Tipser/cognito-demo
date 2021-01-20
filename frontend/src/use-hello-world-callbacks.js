@@ -56,5 +56,5 @@ export function useHelloWorldApiRequests(authToken) {
 }
 
 function getApiUrl() {
-    return process.env.REACT_APP_API_RUL;
+    return process.env.REACT_APP_API_URL;
 }
