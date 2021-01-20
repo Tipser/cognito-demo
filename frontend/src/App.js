@@ -68,30 +68,43 @@ function App() {
     return (
         <div className="App">
             <header className="App-header">
-                {isLoading && <p>Loading...</p>}
-                {!isLoading && <div>
-                    <img src={logo} className="App-logo" alt="logo"/>
-                    {user && (
-                        <div>
-                            <button onClick={() => Auth.signOut()}>Sign
-                                Out {user.getUsername()} {userEmail}</button>
-                            <p>User groups: {userGroups.length > 0 ? userGroups.join(', ') : <i>no groups</i>}</p>
-                        </div>
-                    )}
-                    {!user && <div>
-                        <button onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}>Open Facebook
-                        </button>
-                        <button onClick={() => Auth.federatedSignIn({ provider: 'Google' })}>Open Google</button>
-                        <button onClick={() => Auth.federatedSignIn({ provider: 'COGNITO' })}>Open Hosted UI
-                        </button>
+                <div>
+                    {isLoading && <p>Loading...</p>}
+                    {!isLoading && <>
+                        <img src={logo} className="App-logo" alt="logo"/>
+                        {user && (
+                            <>
+                                <div>
+                                    <button onClick={() => Auth.signOut()}>Sign
+                                        Out {user.getUsername()} {userEmail}</button>
+                                    <p>User groups: {userGroups.length > 0 ? userGroups.join(', ') :
+                                        <i>no groups</i>}</p>
+                                </div>
+                                <label>
+                                    <p style={{ textAlign: 'left', fontSize: '16px' }}>Id Token</p>
+                                    <textarea defaultValue={jwtIdToken}
+                                              style={{ maxWidth: '100%', width: '800px', marginBottom: '1em' }}
+                                              rows={16}/>
+                                </label>
+                            </>
+                        )}
+                        {!user && <div>
+                            <button onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}>Open Facebook
+                            </button>
+                            <button onClick={() => Auth.federatedSignIn({ provider: 'Google' })}>Open Google</button>
+                            <button onClick={() => Auth.federatedSignIn({ provider: 'COGNITO' })}>Open Hosted UI
+                            </button>
 
-                    </div>}
-                </div>}
-                <div style={{ display: 'flex' }}>
-                    <button onClick={doAnonymousRequest}>Request "hello world" for anonymous</button>
-                    <button onClick={doAuthenticatedRequest}>Request "hello world" for authenticated</button>
-                    <button onClick={doAuthorizedRequest}>Request "hello world" for group 'se-order-write'
-                    </button>
+                        </div>}
+                    </>}
+                    <p style={{ textAlign: 'left', fontSize: '16px' }}>Requests to backend resources</p>
+                    <div style={{ display: 'flex' }}>
+                        <button onClick={doAnonymousRequest}>Request "hello world" for anonymous</button>
+                        <button onClick={doAuthenticatedRequest}>Request "hello world" for authenticated
+                        </button>
+                        <button onClick={doAuthorizedRequest}>Request "hello world" for group 'se-order-write'
+                        </button>
+                    </div>
                 </div>
             </header>
         </div>
