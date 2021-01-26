@@ -11,8 +11,8 @@
   ],
   "scripts": {
     "start": "concurrently 'yarn start:fronend' 'yarn start:backend'",
-    "start:fronend": "cd demo-frontend && REACT_APP_PORT=3000 REACT_APP_API_URL=http://localhost:3001 yarn start",
-    "start:backend": "cd demo-backend && PORT=3001 yarn start"
+    "start:fronend": "cd frontend && REACT_APP_PORT=3000 REACT_APP_API_URL=http://localhost:3001 yarn start",
+    "start:backend": "cd backend && PORT=3001 yarn start"
   },
   "devDependencies": {
     "concurrently": "^5.3.0"
