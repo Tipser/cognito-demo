@@ -97,14 +97,14 @@ function App() {
 
                         </div>}
                     </>}
-                    <p style={{ textAlign: 'left', fontSize: '16px' }}>Requests to backend resources</p>
-                    <div style={{ display: 'flex' }}>
-                        <button onClick={doAnonymousRequest}>Request "hello world" for anonymous</button>
-                        <button onClick={doAuthenticatedRequest}>Request "hello world" for authenticated
-                        </button>
-                        <button onClick={doAuthorizedRequest}>Request "hello world" for group 'se-order-write'
-                        </button>
-                    </div>
+                    {/*<p style={{ textAlign: 'left', fontSize: '16px' }}>Requests to backend resources</p>*/}
+                    {/*<div style={{ display: 'flex' }}>*/}
+                    {/*    <button onClick={doAnonymousRequest}>Request "hello world" for anonymous</button>*/}
+                    {/*    <button onClick={doAuthenticatedRequest}>Request "hello world" for authenticated*/}
+                    {/*    </button>*/}
+                    {/*    <button onClick={doAuthorizedRequest}>Request "hello world" for group 'se-order-write'*/}
+                    {/*    </button>*/}
+                    {/*</div>*/}
                 </div>
             </header>
         </div>
