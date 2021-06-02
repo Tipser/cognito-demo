@@ -89,9 +89,9 @@ function App() {
                             </>
                         )}
                         {!user && <div>
-                            <button onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}>Open Facebook
-                            </button>
-                            <button onClick={() => Auth.federatedSignIn({ provider: 'Google' })}>Open Google</button>
+                            {/*<button onClick={() => Auth.federatedSignIn({ provider: 'Facebook' })}>Open Facebook*/}
+                            {/*</button>*/}
+                            {/*<button onClick={() => Auth.federatedSignIn({ provider: 'Google' })}>Open Google</button>*/}
                             <button onClick={() => Auth.federatedSignIn({ provider: 'COGNITO' })}>Open Hosted UI
                             </button>
 
